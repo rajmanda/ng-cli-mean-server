@@ -4,7 +4,9 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Video = require('../models/video');
-
+const fs = require('fs');
+const multer = require('multer') ;
+const upload = multer({dest:'uploads/'}) ;
 
 //const db = "mongodb://sri***lllc:S*****123@ds149353.mlab.com:49353/db4videoplayer";
   const db = process.env.DB_CONN_STRING;
@@ -76,7 +78,6 @@ router.put('/video/:id', function(req, res){
     );
 });
 
-
 router.delete('/video/:id', function(req, res){
     console.log('Deleting a video');
     Video.findByIdAndRemove(req.params.id, function(err, deletedVideo){
@@ -87,5 +88,22 @@ router.delete('/video/:id', function(req, res){
         }
     });
 });
+
+/*make sure the name of the field is 'image' and the type is 'file' for the image that is coming in
+ */
+router.post('/image', upload.single('image'), function(req, res){
+    console.log('req.file', req.file);
+    var newVideo = new Video();
+    newVideo.title = req.body.title;
+    newVideo.url = req.body.url;
+    newVideo.description = req.body.description;
+    newVideo.save(function(err, insertedVideo){
+        if (err){
+            console.log('Error saving video');
+        }else{
+            res.json(insertedVideo);
+        }
+    });
+})
 
 module.exports = router;
