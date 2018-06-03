@@ -7,7 +7,6 @@ NODE
 **About** 
 Same as ng-cli-mean project except this is limiting to just express server. No UI in this project. 
 
-Both the express server and angular application run from the same code base.
 In this example, I am using the mongodb from mlabs.com. you can have your own db instance
 
 To build this applicaiton follow the steps below.
