@@ -6,7 +6,7 @@ const videoSchema = new Schema({
     title: String,
     url: String,
     description: String,
-    image: { data: Buffer, contentType: String }
+    image: { type: String, required: true }
 });
 
 module.exports = mongoose.model('video', videoSchema, 'videos');
