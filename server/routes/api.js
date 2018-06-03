@@ -5,8 +5,40 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Video = require('../models/video');
 const fs = require('fs');
+
+const hostname = require('os-hostname')
+let host = '';
+
+hostname(function (err, hname) {
+    console.log('host', hname) ;
+    host = hname ;
+})
+
 const multer = require('multer') ;
-const upload = multer({dest:'uploads/'}) ;
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        error = null ;
+        cb(error, './uploads') ;
+    },
+    filename: function(req, file, cb){
+        console.log("file. originalname", file.originalname)
+        error = null ;
+        //cb(error, new Date().toISOString() + file.originalname) ; 
+        cb(error, file.originalname) ; 
+    }
+}) ;
+//Filter filetypes. Restrict only Jpeg and png files
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true) ;
+    }else{
+        cb(new Error('FileType Not Suuported - only Jpeg & PNG files are supported.'), false) ;
+    }
+}
+const upload = multer({storage: storage, 
+                       limits:{fileSize:1024 * 1024 * 10},
+                       fileFilter: fileFilter
+                       }) ;
 
 //const db = "mongodb://sri***lllc:S*****123@ds149353.mlab.com:49353/db4videoplayer";
   const db = process.env.DB_CONN_STRING;
@@ -92,11 +124,12 @@ router.delete('/video/:id', function(req, res){
 /*make sure the name of the field is 'image' and the type is 'file' for the image that is coming in
  */
 router.post('/image', upload.single('image'), function(req, res){
-    console.log('req.file', req.file);
+    console.log('Post a Student Profile');
     var newVideo = new Video();
     newVideo.title = req.body.title;
     newVideo.url = req.body.url;
     newVideo.description = req.body.description;
+    newVideo.image = 'http://'+host+':3000/'+req.file.path ;
     newVideo.save(function(err, insertedVideo){
         if (err){
             console.log('Error saving video');
