@@ -7,6 +7,16 @@ const port = 3000;
 
 const app = express();
 
+const hostname = require('os-hostname')
+let host = '';
+
+hostname(function (err, hname) {
+    console.log('hname', hname) ;
+    host = hname ;
+})
+
+//console.log('process.env', process.env); 
+
 // For CORS
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -15,8 +25,11 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(express.static(path.join(__dirname, 'dist')));
+//app.use(express.static(path.join(__dirname, 'dist')));
 
+/* Added this so we can make the uploads folder available for viewing pictures in iFrame from web application
+ */
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true})); 
 app.use(bodyParser.json()); 
 
@@ -28,5 +41,5 @@ app.get('*', (req, res) => {
 });
 */
 app.listen(port, function(){
-    console.log("Server running on localhost:" + port);
+    console.log("Server running on http://"+ host+ ":" + port);
 });
