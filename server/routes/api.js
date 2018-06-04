@@ -6,13 +6,21 @@ const mongoose = require('mongoose');
 const Video = require('../models/video');
 const fs = require('fs');
 
-const hostname = require('os-hostname')
-let host = '';
+const hostname = require('os-hostname');
+const publicIp = require('public-ip');
 
+let host = '';
+/*
 hostname(function (err, hname) {
-    console.log('host', hname) ;
+    console.log('hname', hname) ;
     host = hname ;
 })
+*/
+ 
+publicIp.v4().then(ip => {
+    console.log(ip);
+    host = ip ;
+});
 
 const multer = require('multer') ;
 const storage = multer.diskStorage({

@@ -7,15 +7,21 @@ const port = 3000;
 
 const app = express();
 
-const hostname = require('os-hostname')
-let host = '';
+const hostname = require('os-hostname');
+const publicIp = require('public-ip');
 
+let host = '';
+/*
 hostname(function (err, hname) {
     console.log('hname', hname) ;
     host = hname ;
 })
-
-//console.log('process.env', process.env); 
+*/
+ 
+publicIp.v4().then(ip => {
+    console.log(ip);
+    host = ip ;
+});
 
 // For CORS
 app.use(function (req, res, next) {
