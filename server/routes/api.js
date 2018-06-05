@@ -137,7 +137,9 @@ router.post('/image', upload.single('image'), function(req, res){
     newVideo.title = req.body.title;
     newVideo.url = req.body.url;
     newVideo.description = req.body.description;
-    newVideo.image = 'http://'+host+':3000/'+req.file.path ;
+    newVideo.password = req.body.password;
+    //  newVideo.image = 'http://'+host+':3000/'+req.file.path ;
+    newVideo.image = 'http://localhost:3000/'+req.file.path ;
     newVideo.save(function(err, insertedVideo){
         if (err){
             console.log('Error saving video');
