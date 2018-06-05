@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
 }) ;
 //Filter filetypes. Restrict only Jpeg and png files
 const fileFilter = (req, file, cb) => {
-    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
         cb(null, true) ;
     }else{
         cb(new Error('FileType Not Suuported - only Jpeg & PNG files are supported.'), false) ;
