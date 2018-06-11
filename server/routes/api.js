@@ -138,8 +138,8 @@ router.post('/image', upload.single('image'), function(req, res){
     newVideo.url = req.body.url;
     newVideo.description = req.body.description;
     newVideo.password = req.body.password;
-    newVideo.image = 'http://'+host+':3000/'+req.file.path ;
-    //newVideo.image = 'http://localhost:3000/'+req.file.path ;
+    //newVideo.image = 'http://'+host+':3000/'+req.file.path ;
+    newVideo.image = 'http://localhost:3000/'+req.file.path ;
     newVideo.save(function(err, insertedVideo){
         if (err){
             console.log('Error saving video');
@@ -147,6 +147,51 @@ router.post('/image', upload.single('image'), function(req, res){
             res.json(insertedVideo);
         }
     });
+})
+
+/*make sure the name of the field is 'image' and the type is 'file' for the image that is coming in
+ * to copy mongodb from one instance to another use the following command
+ *  - db.copyDatabase(<from_db>, <to_db>, <from_hostname>, <username>, <password>);
+ *  - db.copyDatabase('db4videoplayer', 'videoplayer', 'ds149353.mlab.com:49353', 'sritechllc', 'S******123')
+ *  - then run the following endpoint operation using postman to update the image URL's. 
+ */
+router.get('/updateHostToLocal', upload.single('image'), function (req, res) {
+  console.log('get a videos to update');
+  let videoArray = []; 
+  Video.find({})
+    .exec(function (err, videos) {
+      if (err) {
+        console.log("Error retrieving videos");
+      } else {
+        videoArray = videos;
+        console.log("all Videos", videoArray);
+
+
+        for (let i = 0; i < videoArray.length; i++) {
+          var findStr = "http://18.207.242.134:3000";
+          var replaceStr = "http://localhost:3000";
+       
+          Video.findByIdAndUpdate(videoArray[i].id,
+            {
+              $set: { title: videoArray[i].title, url: videoArray[i].url, description: videoArray[i].description, image: videoArray[i].image.replace(findStr, replaceStr) }
+            },
+            {
+              new: true
+            },
+            function (err, updatedVideo) {
+              if (err) {
+                console.log("Error updating video");
+              } else {
+                console.log("Record Updated Successfully", videoArray[i]);
+              }
+            }
+          );
+        }
+
+        res.json(videos);
+      }
+    });
+
 })
 
 module.exports = router;
