@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const api = require('./server/routes/api');
+const studentapi = require('./server/routes/studentApi');
 const port = 3000;
 
 const app = express();
@@ -39,7 +39,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true})); 
 app.use(bodyParser.json()); 
 
-app.use('/api', api);
+app.use('/studentapi', studentapi);
 
 /*
 app.get('*', (req, res) => {
