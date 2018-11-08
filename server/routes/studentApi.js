@@ -142,7 +142,8 @@ router.post('/image', upload.single('image'), function(req, res){
     newStudent.achievement = req.body.achievement;
     newStudent.password = req.body.password;
     //newStudent.image = 'http://'+host+':3000/'+req.file.path ;
-    newStudent.image = 'http://localhost:3000/'+req.file.path ;
+    //newStudent.image = 'http://localhost:3000/'+req.file.path ;
+    newStudent.image = 'http://'+process.env.LOCALHOST+':3000/'+req.file.path ;
     newStudent.save(function(err, insertedStudent){
         if (err){
             console.log('Error saving student');
