@@ -10,7 +10,7 @@ const app = express();
 const hostname = require('os-hostname');
 const publicIp = require('public-ip');
 
-let host = '';
+let host = '34.222.137.103';
 /*
 hostname(function (err, hname) {
     console.log('hname', hname) ;
